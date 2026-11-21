@@ -1,0 +1,37 @@
+{
+  "name": "my-financial",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run typecheck && vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@ant-design/icons": "5.6.1",
+    "@fontsource/prompt": "5.3.0",
+    "@fontsource/sarabun": "5.3.0",
+    "@supabase/supabase-js": "2.118.0",
+    "antd": "5.29.3",
+    "dayjs": "1.11.23",
+    "idb": "8.0.3",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.10",
+    "@types/node": "22.20.5",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.3",
+    "fake-indexeddb": "6.2.6",
+    "typescript": "5.9.3",
+    "vite": "7.3.7",
+    "vitest": "4.1.12"
+  }
+}
