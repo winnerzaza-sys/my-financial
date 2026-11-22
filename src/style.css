@@ -1,14 +1,22 @@
 :root {
   font-family: Sarabun, sans-serif;
-  color: #203254;
-  background: #eef5ff;
+  color: var(--ink);
+  background: var(--background);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  --ink: #203254;
-  --muted: #5f7292;
-  --line: #dbe6f7;
-  --blue: #245cdb;
-  --surface: #fff;
+  --ink: #ded9ce;
+  --muted: #a2a4b2;
+  --line: #363946;
+  --accent: #d6b780;
+  --surface: #1d202a;
+  --background: #171923;
+  --raised: #232631;
+  --income: #94b9ae;
+  --expense: #e19f9c;
+  --user-surface: #293448;
+  --user-ink: #e1e6f0;
+  --focus: #d6b780;
+  color-scheme: dark;
 }
 * {
   box-sizing: border-box;
@@ -31,26 +39,63 @@ h2,
 button {
   font: inherit;
 }
-button:focus-visible {
-  outline: 2px solid var(--blue);
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
+}
+::selection {
+  background: #d6b780;
+  color: #171923;
+}
+input,
+textarea {
+  caret-color: var(--accent);
+}
+.conversation,
+.dashboard-content,
+.ant-drawer-body {
+  scrollbar-color: var(--line) var(--background);
+}
+.brand-mark,
+.welcome-mark,
+.avatar {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  font-family: Prompt, Sarabun, sans-serif;
+  font-weight: 500;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 12px 12px 12px 4px;
+}
+.brand-mark {
+  width: 35px;
+  height: 39px;
+  font-size: 22px;
+}
+.welcome-mark {
+  width: 52px;
+  height: 58px;
+  font-size: 32px;
 }
 .app-frame {
   height: 100dvh;
-  min-height: 370px;
+  min-height: 0;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
-  background: radial-gradient(ellipse at 50% 35%, #f9fbff 0, #eef5ff 70%);
+  background: var(--background);
 }
 .app-header {
   padding-top: env(safe-area-inset-top);
-  background: #fffdfdba;
+  background: var(--background);
   border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(14px);
   z-index: 2;
 }
 .header-inner {
-  max-width: 1000px;
+  max-width: 768px;
   margin: auto;
   padding: 12px 26px;
   display: flex;
@@ -64,37 +109,43 @@ button:focus-visible {
   gap: 10px;
   min-width: 0;
 }
-.brand img {
-  width: 45px;
-  height: 45px;
-  border-radius: 12px;
-}
 .brand strong {
   display: block;
   font-size: 1.04rem;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.025em;
 }
-.brand span {
+.brand > div > span {
   display: block;
   color: var(--muted);
   font-size: 0.82rem;
   margin-top: 2px;
 }
 .account-button {
-  background: #edf4ff !important;
-  color: #315697 !important;
-  border-color: #dce8fa !important;
+  background: var(--surface);
+  color: var(--muted);
+  border-color: var(--line);
   min-height: 36px;
   max-width: 45%;
 }
+.account-button:not(:disabled):hover {
+  background: var(--raised);
+  color: var(--ink);
+  border-color: var(--muted);
+}
 .workspace {
-  width: min(100%, 1000px);
+  width: min(100%, 768px);
   margin-inline: auto;
   padding: 22px 26px 0;
   min-height: 0;
   display: flex;
   flex-direction: column;
+}
+.workspace > .section-heading,
+.workspace > .calendar-panel,
+.workspace > .composer,
+.workspace > .chat-summary {
+  flex-shrink: 0;
 }
 .section-heading {
   display: flex;
@@ -105,8 +156,8 @@ button:focus-visible {
 }
 .section-heading h1 {
   margin: 0;
-  font-weight: 600;
-  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 500;
+  font-size: 1.5rem;
   letter-spacing: -0.03em;
 }
 .calendar-panel {
@@ -114,17 +165,15 @@ button:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--surface);
-  padding: 8px;
+  border-bottom: 1px solid var(--line);
+  padding: 10px 0;
 }
 .calendar-panel .ant-segmented {
-  background: #eaf2ff;
-  font-weight: 600;
+  background: var(--background);
+  font-weight: 500;
 }
 .calendar-panel .ant-segmented-item-selected {
-  color: #245cdb;
+  color: var(--accent);
 }
 .range-nav {
   display: flex;
@@ -135,13 +184,18 @@ button:focus-visible {
   border: 0;
   background: none;
   color: var(--ink);
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
   padding: 8px 3px;
   cursor: pointer;
+  min-height: 44px;
+  border-radius: 8px;
+}
+.range-label:hover {
+  background: var(--raised);
 }
 .range-label .anticon {
-  color: var(--blue);
+  color: var(--accent);
   margin-right: 5px;
 }
 .conversation {
@@ -161,21 +215,17 @@ button:focus-visible {
   width: min(100%, 580px);
   padding: 12px;
 }
-.welcome img {
-  width: 85px;
-  height: 85px;
-  border-radius: 24px;
-  box-shadow: 0 10px 24px #2c5cd129;
-}
 .welcome h2 {
-  font-size: clamp(1.2rem, 4.5vw, 1.65rem);
-  font-weight: 600;
+  font-size: 1.25rem;
+  font-weight: 500;
   margin: 15px 0 6px;
 }
 .welcome p {
   margin: 0 0 20px;
   color: var(--muted);
-  line-height: 1.55;
+  line-height: 1.75;
+  max-width: 45ch;
+  margin-inline: auto;
 }
 .suggestions {
   display: flex;
@@ -185,9 +235,11 @@ button:focus-visible {
 }
 .suggestions .ant-btn {
   height: auto;
-  min-height: 33px;
-  color: #2a54a3;
-  border-color: #d4e2fa;
+  min-height: 44px;
+  padding: 8px 12px;
+  white-space: normal;
+  color: var(--ink);
+  border-color: var(--line);
 }
 .chat-row {
   display: flex;
@@ -201,21 +253,27 @@ button:focus-visible {
   width: 32px;
   height: 32px;
   border-radius: 9px;
+  font-size: 18px;
 }
 .chat-bubble {
   max-width: min(86%, 540px);
   border: 1px solid var(--line);
   border-radius: 4px 18px 18px 18px;
-  background: #fff;
+  background: var(--surface);
   padding: 11px 14px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+  line-height: 1.75;
+}
+.assistant .chat-bubble:has(.batch) {
+  border-radius: 14px;
+  padding: 16px;
 }
 .user .chat-bubble {
   border: 0;
-  background: #dce9ff;
+  background: var(--user-surface);
   border-radius: 18px 4px 18px 18px;
-  color: #193d80;
+  color: var(--user-ink);
 }
 .batch {
   min-width: min(58vw, 310px);
@@ -240,12 +298,12 @@ button:focus-visible {
 }
 .batch-item + .batch-item,
 .batch-total {
-  border-top: 1px solid #e9eff8;
+  border-top: 1px solid var(--line);
 }
 .batch-item:hover,
 .history-row:hover,
 .category-row:hover {
-  background: #f5f9ff;
+  background: var(--raised);
 }
 .batch-item small,
 .history-row small {
@@ -257,6 +315,13 @@ button:focus-visible {
 .batch-item strong,
 .history-row strong {
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+.batch-item,
+.history-row {
+  min-height: 52px;
+  border-radius: 6px;
 }
 .batch-total,
 .query-result {
@@ -268,20 +333,21 @@ button:focus-visible {
 }
 .batch-total strong,
 .query-result strong {
-  color: #245cdb;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 .positive {
-  color: #087659;
+  color: var(--income);
 }
 .negative {
-  color: #a93c54;
+  color: var(--expense);
 }
 .draft-bar {
   align-self: flex-start;
   padding: 6px 12px;
-  border: 1px dashed #c2d7f9;
+  border: 1px dashed var(--line);
   border-radius: 9px;
-  color: #315697;
+  color: var(--muted);
 }
 .composer {
   position: relative;
@@ -291,33 +357,74 @@ button:focus-visible {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 7px;
-  background: #fff;
-  border: 1px solid #d5e4fd;
+  background: var(--raised);
+  border: 1px solid #565263;
   border-radius: 16px;
   padding: 7px;
-  box-shadow: 0 5px 20px #16397e12;
+  box-shadow: none;
+}
+.composer-line:focus-within {
+  border-color: var(--focus);
+}
+.composer-line .ant-input::placeholder {
+  color: var(--muted);
+  opacity: 1;
 }
 .composer-line .ant-input {
   border: 0;
   box-shadow: none !important;
   font-size: 16px;
+  background: transparent;
+}
+.composer-line > .ant-btn:not(.send) {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+.chat-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  border-top: 1px solid var(--line);
+  padding: 13px 2px 17px;
+}
+.chat-summary > div {
+  min-width: 0;
+}
+.chat-summary span,
+.chat-summary small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+.chat-summary strong {
+  display: block;
+  margin-top: 5px;
+  font-family: Prompt, Sarabun, sans-serif;
+  font-weight: 500;
+  font-size: 1.125rem;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.chat-summary small {
+  margin-top: 4px;
+  font-size: 0.75rem;
 }
 .composer-line .ant-input:focus-visible {
-  outline: 2px solid var(--blue);
+  outline: 2px solid var(--accent);
 }
 .composer-line .send {
   width: 48px;
 }
 .busy-text {
-  color: #315697;
+  color: var(--muted);
   padding: 0 8px 6px;
   font-size: 0.86rem;
 }
 .bottom-nav {
   border-top: 1px solid var(--line);
   padding-bottom: env(safe-area-inset-bottom);
-  background: #ffffffd1;
-  backdrop-filter: blur(14px);
+  background: var(--background);
 }
 .bottom-nav > div {
   margin: auto;
@@ -331,7 +438,7 @@ button:focus-visible {
   border: 0;
   border-radius: 12px;
   background: none;
-  color: #607395;
+  color: var(--muted);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -339,14 +446,21 @@ button:focus-visible {
   gap: 4px;
   min-height: 45px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 500;
 }
 .bottom-nav .anticon {
   font-size: 17px;
 }
 .bottom-nav .selected {
-  color: #245cdb;
-  background: #e8f0ff;
+  color: var(--accent);
+  background: var(--raised);
+}
+.bottom-nav button:hover {
+  background: var(--raised);
+  color: var(--ink);
+}
+.bottom-nav button:active {
+  background: var(--surface);
 }
 .dashboard-content {
   overflow: auto;
@@ -364,7 +478,7 @@ button:focus-visible {
 .metric {
   border: 1px solid var(--line);
   border-radius: 15px;
-  background: #fff;
+  background: transparent;
   color: var(--ink);
   padding: 13px 12px;
   min-width: 0;
@@ -372,22 +486,26 @@ button:focus-visible {
   cursor: pointer;
 }
 .metric.net {
-  background: #e1ebff;
-  border-color: #d1dfff;
+  background: var(--raised);
+  border-color: var(--line);
 }
 .metric .ant-statistic-content {
-  font-size: clamp(0.83rem, 3.4vw, 1.65rem);
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
   color: var(--ink);
 }
 .metric.income .ant-statistic-content {
-  color: #087659;
+  color: var(--income);
 }
 .metric.expense .ant-statistic-content {
-  color: #a93c54;
+  color: var(--expense);
 }
 .metric small,
 .muted {
+  color: var(--muted);
+}
+.metric .ant-statistic-title {
   color: var(--muted);
 }
 .dashboard-content .ant-card {
@@ -406,11 +524,21 @@ button:focus-visible {
 .amount-line strong {
   font-size: 1.4rem;
 }
+.amount-line,
+.category-row strong {
+  font-variant-numeric: tabular-nums;
+}
 .category-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 4px 14px;
   padding: 8px 4px;
+}
+.category-row span,
+.batch-item > span,
+.history-row > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .category-row .ant-progress {
   grid-column: 1 / -1;
@@ -426,6 +554,14 @@ button:focus-visible {
 }
 .drawer-body .ant-alert {
   margin-bottom: 12px;
+}
+.form-actions {
+  padding-block: 8px;
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+}
+.form-actions .ant-btn {
+  min-height: 44px;
+  min-width: 88px;
 }
 .form-pair {
   display: grid;
@@ -464,11 +600,7 @@ button:focus-visible {
   .workspace {
     padding: 13px 12px 0;
   }
-  .brand img {
-    width: 37px;
-    height: 37px;
-  }
-  .brand span {
+  .brand > div > span {
     display: none;
   }
   .brand strong {
@@ -477,13 +609,13 @@ button:focus-visible {
   .account-button {
     font-size: 0.79rem;
     padding-inline: 8px;
-    height: 34px;
+    min-height: 44px;
   }
   .calendar-panel {
     align-items: stretch;
     flex-direction: column;
     gap: 3px;
-    padding: 6px;
+    padding: 8px 0;
   }
   .calendar-panel .ant-segmented {
     display: block;
@@ -495,7 +627,8 @@ button:focus-visible {
     justify-content: space-between;
   }
   .range-nav .ant-btn {
-    height: 32px;
+    height: 44px;
+    min-width: 44px;
   }
   .range-label {
     font-size: 0.92rem;
@@ -510,15 +643,14 @@ button:focus-visible {
   .metric .ant-statistic-title {
     font-size: 0.78rem;
   }
+  .metric .ant-statistic-content {
+    font-size: 1.125rem;
+  }
   .metric .ant-statistic-content-prefix {
     display: none;
   }
   .metric small {
-    font-size: 0.71rem;
-  }
-  .welcome img {
-    width: 67px;
-    height: 67px;
+    font-size: 0.75rem;
   }
   .welcome h2 {
     margin-top: 11px;
@@ -529,8 +661,60 @@ button:focus-visible {
   .chat-bubble {
     padding: 9px 11px;
   }
+  .chat-summary {
+    gap: 8px;
+    padding-block: 9px 12px;
+  }
   .ant-drawer-body .ant-input,
   .ant-drawer-body .ant-input-number-input {
     font-size: 16px;
+  }
+}
+@media (max-height: 650px) {
+  .chat-summary {
+    display: none;
+  }
+  .workspace {
+    padding-top: 10px;
+  }
+  .section-heading {
+    margin-bottom: 8px;
+  }
+}
+@media (max-height: 450px) {
+  .header-inner {
+    padding-block: 7px;
+  }
+  .brand > div > span {
+    display: none;
+  }
+  .calendar-panel {
+    padding-block: 4px;
+  }
+  .range-nav {
+    justify-content: space-between;
+  }
+  .composer {
+    padding-block: 4px 6px;
+  }
+  .conversation {
+    padding-block: 4px;
+  }
+}
+@media (max-width: 360px) {
+  .form-pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .chat-summary strong {
+    font-size: 1rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

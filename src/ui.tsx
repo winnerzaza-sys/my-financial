@@ -346,7 +346,7 @@ function Workspace({ ledger, account }: { ledger: Ledger; account: ReturnType<ty
       <header className="app-header">
         <div className="header-inner">
           <div className="brand">
-            <img src="/coin.svg" alt="" />
+            <span className="brand-mark" aria-hidden="true">฿</span>
             <div>
               <strong>แชทรายรับ–รายจ่าย</strong>
               <span>บันทึกและดูยอดในที่เดียว</span>
@@ -403,7 +403,7 @@ function Workspace({ ledger, account }: { ledger: Ledger; account: ReturnType<ty
             <div className="conversation" ref={chat} aria-live="polite">
               {!roomMessages.length && (
                 <section className="welcome">
-                  <img src="/coin.svg" alt="" />
+                  <span className="welcome-mark" aria-hidden="true">฿</span>
                   <h2>วันนี้มีรายการอะไรบ้าง?</h2>
                   <p>พิมพ์รายรับหรือรายจ่ายพร้อมยอดเงิน หรือแนบสลิปเพื่อตรวจข้อมูลก่อนบันทึก</p>
                   <div className="suggestions">
@@ -439,7 +439,7 @@ function Workspace({ ledger, account }: { ledger: Ledger; account: ReturnType<ty
                   : 0
                 return (
                   <div className={'chat-row ' + data.role} key={entry.id}>
-                    {data.role === 'assistant' && <img className="avatar" src="/coin.svg" alt="" />}
+                    {data.role === 'assistant' && <span className="avatar" aria-hidden="true">฿</span>}
                     <div className="chat-bubble">
                       {data.text && <div>{data.text}</div>}
                       {result && (
@@ -549,6 +549,19 @@ function Workspace({ ledger, account }: { ledger: Ledger; account: ReturnType<ty
                 />
               </div>
             </form>
+            <section className="chat-summary" aria-label="สรุปยอดช่วงที่เลือก">
+              {(['income', 'expense', 'net'] as const).map((metric) => (
+                <div key={metric}>
+                  <span>{metricTitle[metric]}</span>
+                  <strong className={metric === 'income' ? 'positive' : metric === 'expense' ? 'negative' : undefined}>
+                    {metric === 'net' && totals.net > 0 ? '+' : ''}฿{baht(totals[metric])}
+                  </strong>
+                  {metric === 'income' && totals.refunds > 0 && (
+                    <small>รวมเงินคืน ฿{baht(totals.refunds)}</small>
+                  )}
+                </div>
+              ))}
+            </section>
           </>
         ) : (
           <div className="dashboard-content">
@@ -620,7 +633,7 @@ function Workspace({ ledger, account }: { ledger: Ledger; account: ReturnType<ty
               {!totals.byCategory.size && <p className="muted">ยังไม่มีรายจ่ายในช่วงนี้</p>}
               {Array.from(totals.byCategory)
                 .sort((a, b) => b[1] - a[1])
-                .map(([label, amount], index) => (
+                .map(([label, amount]) => (
                   <button
                     className="category-row"
                     key={label}
@@ -630,7 +643,7 @@ function Workspace({ ledger, account }: { ledger: Ledger; account: ReturnType<ty
                     <strong>฿{baht(amount)}</strong>
                     <Progress
                       showInfo={false}
-                      strokeColor={['#4979ec', '#68a9f3', '#5f8cce'][index % 3]}
+                      strokeColor="var(--expense)"
                       percent={Math.round((amount / totals.expense) * 100)}
                     />
                   </button>

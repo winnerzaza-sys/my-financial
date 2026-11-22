@@ -13,7 +13,7 @@ import {
   Switch,
 } from 'antd'
 import dayjs from 'dayjs'
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import {
   baht,
   categories,
@@ -84,6 +84,7 @@ export function TransactionForm({
   onRemove?: () => void
   getDuplicates?: (input: Partial<TransactionInput>) => Transaction[]
 }) {
+  const formId = useId()
   const [form] = Form.useForm<Fields>()
   const type = Form.useWatch('type', form) ?? initial.type
   const [busy, setBusy] = useState(false)
@@ -175,8 +176,24 @@ export function TransactionForm({
       height="min(88dvh, 900px)"
       onClose={onClose}
       title={original ? 'แก้ไขรายการ' : slip ? 'ตรวจสลิปก่อนบันทึก' : 'กรอกรายการเอง'}
+      footer={
+        <div className="drawer-body form-actions">
+          <Space wrap>
+            <Button type="primary" htmlType="submit" form={formId} loading={busy}>
+              บันทึก
+            </Button>
+            <Button onClick={onClose}>ยกเลิก</Button>
+            {onRemove && (
+              <Button danger disabled={busy} onClick={onRemove}>
+                ลบรายการ
+              </Button>
+            )}
+          </Space>
+        </div>
+      }
     >
       <Form
+        id={formId}
         form={form}
         initialValues={formInitial()}
         layout="vertical"
@@ -277,17 +294,6 @@ export function TransactionForm({
             <Checkbox>AI ตีความผิด</Checkbox>
           </Form.Item>
         )}
-        <Space wrap>
-          <Button type="primary" htmlType="submit" loading={busy}>
-            บันทึก
-          </Button>
-          <Button onClick={onClose}>ยกเลิก</Button>
-          {onRemove && (
-            <Button danger disabled={busy} onClick={onRemove}>
-              ลบรายการ
-            </Button>
-          )}
-        </Space>
       </Form>
     </Drawer>
   )
