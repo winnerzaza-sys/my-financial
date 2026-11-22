@@ -26,6 +26,7 @@ function progress(text: string) {
 
 self.onmessage = async (event: MessageEvent<ModelRequest>) => {
   const { text, today, model, categories, methods } = event.data
+  let fatal = true
   try {
     if (!generation) {
       progress('กำลังเตรียม Qwen…')
@@ -70,11 +71,13 @@ Category choices ${categories.join(', ')}. Payment methods ${methods.join(', ')}
     const output = await (
       run as unknown as (p: string, o: Record<string, unknown>) => Promise<{ generated_text: string }[]>
     )(prompt, { max_new_tokens: 650, do_sample: false, return_full_text: false })
+    // Invalid output does not invalidate the loaded model or its GPU session.
+    fatal = false
     const candidate = output[0]?.generated_text?.replace(/<think>[\s\S]*?<\/think>/g, '').trim() ?? ''
     const json = candidate.slice(candidate.indexOf('{'), candidate.lastIndexOf('}') + 1)
     self.postMessage({ result: JSON.parse(json) })
   } catch (error) {
-    generation = undefined
-    self.postMessage({ error: error instanceof Error ? error.message : 'โหลดโมเดลไม่ได้' })
+    if (fatal) generation = undefined
+    self.postMessage({ error: error instanceof Error ? error.message : 'ประมวลผลโมเดลไม่ได้', fatal })
   }
 }

@@ -104,7 +104,13 @@ const qwen: TextInterpreter = {
       }
       function onMessage(event: MessageEvent) {
         if (event.data.progress) progress(event.data.progress)
-        else if (event.data.error) finish(new Error(event.data.error))
+        else if (event.data.error) {
+          const error = new Error(event.data.error)
+          if (event.data.fatal === false) {
+            close()
+            reject(error)
+          } else finish(error)
+        }
         else {
           close()
           resolve(event.data.result)
